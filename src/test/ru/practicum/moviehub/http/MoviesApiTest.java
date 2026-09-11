@@ -145,7 +145,7 @@ public class MoviesApiTest {
         HttpResponse<String> createdResponse = sendPost("/movies", "{\"title\":\"Inception\",\"year\":2010}");
         int movieId = extractId(createdResponse.body());
 
-        HttpResponse<String> response = sendGet("/movies/" + movieId);
+        HttpResponse<String> response = sendGet(String.format("/movies/%d", movieId));
 
         assertEquals(200, response.statusCode(), "Статус должен быть 200");
         assertContentType(response);
@@ -241,7 +241,7 @@ public class MoviesApiTest {
 
     private HttpResponse<String> sendGet(String path) throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + path))
+                .uri(URI.create(String.format("%s%s", BASE_URL, path)))
                 .timeout(Duration.ofSeconds(2))
                 .GET()
                 .build();
@@ -250,7 +250,7 @@ public class MoviesApiTest {
 
     private HttpResponse<String> sendPost(String path, String json) throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + path))
+                .uri(URI.create(String.format("%s%s", BASE_URL, path)))
                 .header("Content-Type", "application/json")
                 .timeout(Duration.ofSeconds(2))
                 .POST(HttpRequest.BodyPublishers.ofString(json))
@@ -260,7 +260,7 @@ public class MoviesApiTest {
 
     private HttpResponse<String> sendDelete(String path) throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + path))
+                .uri(URI.create(String.format("%s%s", BASE_URL, path)))
                 .timeout(Duration.ofSeconds(2))
                 .DELETE()
                 .build();
